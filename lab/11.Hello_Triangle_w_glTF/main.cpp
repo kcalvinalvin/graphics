@@ -191,9 +191,7 @@ void init_buffer_objects()
 
                     const int accessor_index = attrib.second;
                     const tinygltf::Accessor& accessor = accessors[accessor_index];
-
-                    int bufferView_index = accessor.bufferView;
-                    const tinygltf::BufferView& bufferView = bufferViews[bufferView_index];
+                    const tinygltf::BufferView& bufferView = bufferViews[accessor.bufferView];
                     const tinygltf::Buffer& buffer = buffers[bufferView.buffer];
 
                     if (attrib.first.compare("POSITION") == 0)
@@ -225,8 +223,7 @@ void render_object()
     const std::vector<tinygltf::Mesh>& meshes = model.meshes;
     const std::vector<tinygltf::Accessor>& accessors = model.accessors;
     const std::vector<tinygltf::BufferView>& bufferViews = model.bufferViews;
-    const std::vector<tinygltf::Buffer>& buffers = model.buffers;
-
+    
     for (size_t i = 0; i < meshes.size(); ++i)
     {
         const tinygltf::Mesh& mesh = meshes[i];
@@ -250,8 +247,7 @@ void render_object()
 
                     count = accessor.count;
 
-                    int bufferView_index = accessor.bufferView;
-                    const tinygltf::BufferView& bufferView = bufferViews[bufferView_index];
+                    const tinygltf::BufferView& bufferView = bufferViews[accessor.bufferView];
 
                     if (attrib.first.compare("POSITION") == 0)
                     {

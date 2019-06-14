@@ -334,7 +334,7 @@ void init_texture_objects()
     glBindTexture(GL_TEXTURE_2D, diffuse_texid);
 
     const tinygltf::Image& image = images[texture.source];
-    const tinygltf::Sampler& sampler = samplers[texture.source];
+    const tinygltf::Sampler& sampler = samplers[texture.sampler];
 
     GLenum format = GL_RGBA;
     if (image.component == 1) {
@@ -443,7 +443,6 @@ void draw_mesh(const tinygltf::Mesh& mesh, const kmuvcl::math::mat4f& mat_model)
   const std::vector<tinygltf::Texture>& textures = model.textures;
   const std::vector<tinygltf::Accessor>& accessors = model.accessors;
   const std::vector<tinygltf::BufferView>& bufferViews = model.bufferViews;
-  const std::vector<tinygltf::Buffer>& buffers = model.buffers;
 
   glUseProgram(program);
 
@@ -488,9 +487,7 @@ void draw_mesh(const tinygltf::Mesh& mesh, const kmuvcl::math::mat4f& mat_model)
       const int accessor_index = attrib.second;
       const tinygltf::Accessor& accessor = accessors[accessor_index];
 
-      int bufferView_index = accessor.bufferView;
-      const tinygltf::BufferView& bufferView = bufferViews[bufferView_index];
-      const tinygltf::Buffer& buffer = buffers[bufferView.buffer];
+      const tinygltf::BufferView& bufferView = bufferViews[accessor.bufferView];
       const int byteStride = accessor.ByteStride(bufferView);
 
       if (attrib.first.compare("POSITION") == 0)
@@ -523,11 +520,8 @@ void draw_mesh(const tinygltf::Mesh& mesh, const kmuvcl::math::mat4f& mat_model)
     }
 
     const tinygltf::Accessor& index_accessor = accessors[primitive.indices];
-
-    int bufferView_index = index_accessor.bufferView;
-    const tinygltf::BufferView& bufferView = bufferViews[bufferView_index];
-    const tinygltf::Buffer& buffer = buffers[bufferView.buffer];
-
+    const tinygltf::BufferView& bufferView = bufferViews[index_accessor.bufferView];
+    
     glBindBuffer(bufferView.target, index_buffer);
 
     glDrawElements(primitive.mode,

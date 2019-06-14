@@ -345,8 +345,7 @@ void render_object()
   const std::vector<tinygltf::Mesh>& meshes = model.meshes;
   const std::vector<tinygltf::Accessor>& accessors = model.accessors;
   const std::vector<tinygltf::BufferView>& bufferViews = model.bufferViews;
-  const std::vector<tinygltf::Buffer>& buffers = model.buffers;
-
+  
   for (const tinygltf::Node& node : nodes)
   {
     if (node.mesh > -1)
@@ -364,8 +363,8 @@ void render_object()
       }
 
       if (node.scale.size() == 3) {
-          mat_model = kmuvcl::math::scale<float>(
-              node.scale[0], node.scale[1], node.scale[2])*mat_model;
+          mat_model = mat_model*kmuvcl::math::scale<float>(
+              node.scale[0], node.scale[1], node.scale[2]);
       }
 
       mat_PVM = mat_proj * mat_view * mat_model;
@@ -380,9 +379,7 @@ void render_object()
               const int accessor_index = attrib.second;
               const tinygltf::Accessor& accessor = accessors[accessor_index];
 
-              int bufferView_index = accessor.bufferView;
-              const tinygltf::BufferView& bufferView = bufferViews[bufferView_index];
-              const tinygltf::Buffer& buffer = buffers[bufferView.buffer];
+              const tinygltf::BufferView& bufferView = bufferViews[accessor.bufferView];
               const int byteStride = accessor.ByteStride(bufferView);
 
               if (attrib.first.compare("POSITION") == 0)
@@ -397,11 +394,8 @@ void render_object()
           }
 
           const tinygltf::Accessor& index_accessor = accessors[primitive.indices];
-
-          int bufferView_index = index_accessor.bufferView;
-          const tinygltf::BufferView& bufferView = bufferViews[bufferView_index];
-          const tinygltf::Buffer& buffer = buffers[bufferView.buffer];
-
+          const tinygltf::BufferView& bufferView = bufferViews[index_accessor.bufferView];
+          
           glBindBuffer(bufferView.target, index_buffer);
 
           glDrawElements(primitive.mode,
