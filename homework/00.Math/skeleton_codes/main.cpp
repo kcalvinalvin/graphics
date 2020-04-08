@@ -49,7 +49,7 @@ void dim_3x3_test()
   // vector + operator
   std::cout << "x + y => " << x + y << std::endl;
 
-  // vector + operator
+  // vector - operator
   std::cout << "x - y => " << x - y << std::endl;
 
   // dot product test
